@@ -1,6 +1,7 @@
 using Discord_Webhook_Clase.models;
 using System.Net.Http.Json;
 using Discord_Webhook_Clase.utils;
+using System.Net;
 
 namespace Discord_Webhook_Clase.services;
 
@@ -13,7 +14,13 @@ public class DiscordWebhookService
         WebhookURL = webhookUrl;
     }
     
-    public async void SendAssigmentAsync(Assignment assigment)
+    /// <summary>
+    /// Send the task to the channel
+    /// </summary>
+    /// <param name="assigment">Task to post on the channel</param>
+    /// <exception cref="HttpRequestException">Exception if the Task can't be send.</exception>
+    /// <returns>Task int with the status code</returns>
+    public async Task<int> SendAssigmentAsync(Assignment assigment)
     {
         using HttpClient httpClient = new();
         long unixTimestamp = Utils.ToUnixTimestamp(assigment.DueDate);
@@ -49,8 +56,8 @@ public class DiscordWebhookService
         HttpResponseMessage response = await httpClient.PostAsJsonAsync(
             WebhookURL,
             payload
-        );
-
-        response.EnsureSuccessStatusCode();
+        );  
+        int statusCode = (int) response.EnsureSuccessStatusCode().StatusCode;
+        return statusCode;
     }
 }
