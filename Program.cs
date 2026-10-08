@@ -5,7 +5,6 @@ using DotNetEnv;
 
 try
 {
-
     if(args.Length != 1)
     {
         Console.WriteLine("Proporciona la ruta del JSON");
@@ -17,7 +16,7 @@ try
         return;
     }
 
-    var envPath = Path.Combine(AppContext.BaseDirectory, ".env");
+    string envPath = Path.Combine(AppContext.BaseDirectory, ".env");
     Env.Load(envPath);
     Console.WriteLine(envPath);
     string DISCORD_URL = Env.GetString("DISCORD_URL");
@@ -29,24 +28,28 @@ try
     };
 
     string json = await File.ReadAllTextAsync(args[0]);
-    Assignment? assigment = JsonSerializer.Deserialize<Assignment>(json, jsonOptions);
+    Assignment[]? assigments = JsonSerializer.Deserialize<Assignment[]>(json, jsonOptions);
 
-    if(assigment == null)
+    if(assigments == null || assigments.Length == 0)
     {
-        Console.WriteLine("La tarea está vacía, no se puede crear");
+        Console.WriteLine("No hay tareas que añadir.");
         return;
     }
 
     DiscordWebhookService discord = new(DISCORD_URL);
-    int statusCode = await discord.SendAssigmentAsync(assigment);
-    string response = statusCode == 204
-        ? "La tarea se ha enviado con éxito."
-        : $"La tarea NO se ha podido enviar. Código de estado: {statusCode}";
-        Console.WriteLine(response);
-}
-catch(HttpRequestException ex)
-{
-    Console.WriteLine($"Ha ocurrido un error al tratar de enviar la tarea: {ex}");
+    int statusCode;
+    foreach(Assignment a in assigments) {
+        try {
+            statusCode = await discord.SendAssigmentAsync(a);
+            string response = statusCode == 204
+                ? $"La tarea '{a.Title}' se ha enviado con éxito."
+                : $"La tarea '{a.Title}' NO se ha podido enviar. Código de estado: {statusCode}";
+            Console.WriteLine(response);
+        }catch(HttpRequestException ex)
+        {
+            Console.WriteLine($"Ha ocurrido un error al tratar de enviar la tarea '{a.Title}'. Mensaje del error:\n{ex}");
+        }
+    }
 }
 catch(Exception ex)
 {
