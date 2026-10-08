@@ -1,20 +1,38 @@
-﻿using Discord_Webhook_Clase.models;
+﻿using System.Text.Json;
+using Discord_Webhook_Clase.models;
 using Discord_Webhook_Clase.services;
 using DotNetEnv;
 
 try
 {
+
+    if(args.Length != 1)
+    {
+        Console.WriteLine("Proporciona la ruta del JSON");
+        return;
+    }
+    if(!File.Exists(args[0]))
+    {
+        Console.WriteLine($"El fichero '{args[0]}' no existe o no se ha encontrado.");
+        return;
+    }
+
     Env.Load();
     string DISCORD_URL = Env.GetString("DISCORD_URL");
 
-
-    Assignment assigment = new()
+    JsonSerializerOptions jsonOptions = new()
     {
-        Title = "Ejemplo de tarea",
-        Subject = "Desarrollo Web",
-        Description = "Ejemplo de tarea",
-        DueDate = new DateTime(2026, 10, 15, 23, 59, 0)
+        PropertyNameCaseInsensitive = true  
     };
+
+    string json = await File.ReadAllTextAsync(args[0]);
+    Assignment? assigment = JsonSerializer.Deserialize<Assignment>(json, jsonOptions);
+
+    if(assigment == null)
+    {
+        Console.WriteLine("La tarea está vacía, no se puede crear");
+        return;
+    }
 
     DiscordWebhookService discord = new(DISCORD_URL);
     int statusCode = await discord.SendAssigmentAsync(assigment);

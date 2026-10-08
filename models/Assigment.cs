@@ -14,4 +14,5 @@ public class Assignment
     public DateTime DueDate { get; set; }
 
     public int Color { get; set; } = 5871434;
+
 }
