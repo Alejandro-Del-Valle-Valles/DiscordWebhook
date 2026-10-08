@@ -5,7 +5,7 @@ DiscordWebhook es un pequeño programa de consola elaborado para poder enviar ta
 con texto enriquecido a un canala de un servidor de Discord mediante un Webhook, automitazando, facilitando, y mejorando la información de las tareas y su
 contenido.
 
-> Estado: Version 1.0
+> Estado: Version 1.1
 
 ## Requisitos:
 - .NET 10 o superior
@@ -27,10 +27,13 @@ Independientemente del sistema en el que compile la aplicación, se generara un 
 ### Windows
 Mueva el fichero `PublicarTarea.exe` a una carpeta fija, por ejemplo `C:\MisHerramientas` y añada al PATH la ruta al .exe.
 ### Linux & MacOS
-Debe darle permisos de ejecución y moverlo al directorio bin
+Debe darle permisos de ejecución y moverlo al directorio bin, después, copiar el .env a la misma ruta y darle permisos de ejecución.
 `chmod +x ./publish/PublicarTarea`
 `sudo mv ./publish/PublicarTarea /usr/local/bin/`
+`sudo cp .env /usr/local/bin/.env`
+`sudo chmod 600 /usr/local/bin/.env`
+
 
 ## Forma de uso
 Para poder hacer uso de la aplicación, una vez la tenga compilada y añadida al entorno global, debe ejecutar el siguiente comando. 
-`PublicarTarea ruta/a/tarea.json`
+`PublicarTarea ruta/a/tarea.json` en Windows y `sudo PublicarTarea ruta/a/tarea.json` en Linux y MacOS

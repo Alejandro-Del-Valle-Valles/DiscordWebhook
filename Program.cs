@@ -17,8 +17,11 @@ try
         return;
     }
 
-    Env.Load();
+    var envPath = Path.Combine(AppContext.BaseDirectory, ".env");
+    Env.Load(envPath);
+    Console.WriteLine(envPath);
     string DISCORD_URL = Env.GetString("DISCORD_URL");
+    Console.WriteLine(DISCORD_URL);
 
     JsonSerializerOptions jsonOptions = new()
     {
