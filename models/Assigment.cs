@@ -5,14 +5,21 @@ namespace Discord_Webhook_Clase.models;
 /// </summary>
 public class Assignment
 {
-    public string Title { get; set; } = string.Empty;
+    required public string Title { get; set; }
 
     public string Subject { get; set; } = string.Empty;
 
-    public string Description { get; set; } = string.Empty;
+    public string Description { get; set; } = "Sin Descripción";
 
+    /// <summary>
+    /// Format yyyy-MM-ddTHH:mm:ss
+    /// </summary>
     public DateTime DueDate { get; set; }
+    public string Url { get; set; } = "Sin Enlace";
 
-    public int Color { get; set; } = 5871434;
+    /// <summary>
+    /// Hexadecimal code color. Default green
+    /// </summary>
+    public string Color { get; set; } = "6CD667";
 
 }

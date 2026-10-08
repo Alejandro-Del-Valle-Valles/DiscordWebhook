@@ -4,6 +4,7 @@
         "subject": "Asignatura",
         "description": "Descripción de la tarea",
         "dueDate": "2026-10-18T23:59:00",
-        "color": 11111111
+        "url": "https://google.com",
+        "color": "427040" <- Hexadecimal
     }
 ]

@@ -1,7 +1,6 @@
 using Discord_Webhook_Clase.models;
 using System.Net.Http.Json;
 using Discord_Webhook_Clase.utils;
-using System.Net;
 
 namespace Discord_Webhook_Clase.services;
 
@@ -33,7 +32,7 @@ public class DiscordWebhookService
                 {
                     title = assigment.Title,
                     description = assigment.Description,
-                    color = assigment.Color,
+                    color = Convert.ToInt32(assigment.Color, 16),
                     fields = new[]
                     {
                         new
@@ -47,6 +46,12 @@ public class DiscordWebhookService
                             name = "Fecha límite:",
                             value = $"<t:{unixTimestamp}:F>\n⏳ <t:{unixTimestamp}:R>",
                             inline = true
+                        },
+                        new
+                        {
+                            name = "Enlace a la tarea:",
+                            value = assigment.Url,
+                            inline = false
                         }
                     }
                 }
